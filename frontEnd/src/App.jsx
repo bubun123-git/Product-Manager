@@ -6,7 +6,7 @@ function App() {
   const [skills, setSkills] = useState([]); // Stores skills fetched from the server
   const [jobDescription, setJobDescription] = useState(""); // Stores job description entered by user
   const [resumeFile, setResumeFile] = useState(null); // Stores resume file uploaded by user
-
+  const [matchingSkills, setMatchingSkills] = useState([]); // Stores matching skills
   
   useEffect(() => {
     // Function to fetch skills from the server
@@ -20,17 +20,13 @@ function App() {
         })
         .then((data) => {
           setSkills(data);
+          console.log("Fetched Skills:", data); // Log fetched skills
         })
         .catch((err) => console.log(err));
     };
 
     fetchSkills();
   }, []);
-
-  // Handle change in job description textarea
-  const handleJobDescriptionChange = (event) => {
-    setJobDescription(event.target.value);
-  };
 
   // Handle change in uploaded resume file
   const handleFileChange = (event) => {
@@ -39,8 +35,7 @@ function App() {
       file &&
       (file.type === "application/pdf" ||
         file.type === "application/msword" ||
-        file.type ===
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     ) {
       setResumeFile(file);
     } else {
@@ -53,9 +48,21 @@ function App() {
     event.preventDefault();
     console.log("Job Description:", jobDescription);
     console.log("Resume File:", resumeFile);
+    
+    // Match keywords with skills
+    const matching = skills.filter(skill => {
+      if (typeof skill === 'object' && skill.skill) {
+        return jobDescription.toLowerCase().includes(skill.skill.toLowerCase());
+      }
+      return false;
+    }).map(skill => skill.skill);
+
+    console.log("Matching Skills:", matching);
+    setMatchingSkills(matching);
+
     setJobDescription("");
     setResumeFile(null);
-    // You can include code here to handle form submission, e.g., sending data to the server
+    
   };
 
   // Render component
@@ -68,7 +75,7 @@ function App() {
           <textarea
             id="jobDescription"
             value={jobDescription}
-            onChange={handleJobDescriptionChange}
+            onChange={(event) => setJobDescription(event.target.value)}
             required
           />
         </div>
@@ -84,6 +91,18 @@ function App() {
         </div>
         <button type="submit">Submit</button>
       </form>
+      {matchingSkills.length > 0 ? (
+        <div>
+          <h2 style={{color: "whitesmoke"}}>Matching Skills:</h2>
+          <ul>
+            {matchingSkills.map((skill, index) => (
+              <li style={{color: "black"}} key={index}>{skill}</li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <p>No matches found.</p>
+      )}
     </div>
   );
 }
