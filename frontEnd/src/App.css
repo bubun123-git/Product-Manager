@@ -1,0 +1,67 @@
+/* Base styles for a clean and modern look */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  width: 600px; /* Adjust width as needed */
+  margin: 50px auto; /* Center the form horizontally */
+  padding: 30px;
+  border-radius: 5px;
+  background-color: #e6d3ac; /* Light blue background */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333; /* Darker text for readability */
+}
+
+/* Form group styles for clarity and visual hierarchy */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #333; /* Darker text for readability */
+}
+
+/* Input and Textarea styles for a professional look */
+input[type="text"],
+input[type="file"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 16px;
+  color: #f8f8f8;
+  resize: none; /* Disable resizing for textarea */
+}
+
+input[type="file"] {
+  cursor: pointer; /* Indicate clickable file upload */
+}
+
+/* Button styles for a clear call to action */
+button[type="submit"] {
+  background-color: #4CAF50; /* Green color for positive action */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s ease-in-out background-color; /* Smooth hover effect */
+}
+
+button[type="submit"]:hover {
+  background-color: #3e8e41; /* Darker green on hover */
+}
