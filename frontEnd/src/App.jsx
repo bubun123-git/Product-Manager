@@ -7,7 +7,7 @@ function App() {
   const [jobDescription, setJobDescription] = useState(""); // Stores job description entered by user
   const [resumeFile, setResumeFile] = useState(null); // Stores resume file uploaded by user
   const [matchingSkills, setMatchingSkills] = useState([]); // Stores matching skills
-  
+
   useEffect(() => {
     // Function to fetch skills from the server
     const fetchSkills = () => {
@@ -35,7 +35,8 @@ function App() {
       file &&
       (file.type === "application/pdf" ||
         file.type === "application/msword" ||
-        file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     ) {
       setResumeFile(file);
     } else {
@@ -44,66 +45,66 @@ function App() {
   };
 
   // Handle form submission
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Job Description:", jobDescription);
-    console.log("Resume File:", resumeFile);
-    
-    // Match keywords with skills
-    const matching = skills.filter(skill => {
-      if (typeof skill === 'object' && skill.skill) {
-        return jobDescription.toLowerCase().includes(skill.skill.toLowerCase());
-      }
-      return false;
-    }).map(skill => skill.skill);
+  // Handle form submission
+const handleSubmit = (event) => {
+  event.preventDefault();
+  console.log("Job Description:", jobDescription);
+  console.log("Resume File:", resumeFile);
 
-    console.log("Matching Skills:", matching);
-    setMatchingSkills(matching);
+  // Match keywords with skills
+  const matching = skills.filter((skill) => {
+    if (typeof skill === "object" && skill.skill) {
+      return jobDescription.toLowerCase().includes(skill.skill.toLowerCase());
+    }
+    return false;
+  });
 
-    setJobDescription("");
-    setResumeFile(null);
-    
-  };
+  console.log("Number of Matching Skills:", matching.length);
+  console.log("Matching Skills:", matching.map((skill) => skill.skill));
+
+  setMatchingSkills(matching.length);
+
+  setJobDescription("");
+  setResumeFile(null);
+};
+
 
   // Render component
   return (
     <div className="app">
-      <h1>Apply for a Job</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="jobDescription">Job Description:</label>
-          <textarea
-            id="jobDescription"
-            value={jobDescription}
-            onChange={(event) => setJobDescription(event.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="resumeFile">Upload Resume (PDF/Word):</label>
-          <input
-            type="file"
-            id="resumeFile"
-            accept=".pdf,.doc,.docx"
-            onChange={handleFileChange}
-            required
-          />
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-      {matchingSkills.length > 0 ? (
-        <div>
-          <h2 style={{color: "whitesmoke"}}>Matching Skills:</h2>
-          <ul>
-            {matchingSkills.map((skill, index) => (
-              <li style={{color: "black"}} key={index}>{skill}</li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <p>No matches found.</p>
-      )}
+    <h1>Apply for a Job</h1>
+    <form onSubmit={handleSubmit}>
+      {/* Job Description */}
+      <div className="form-group">
+        <label htmlFor="jobDescription">Job Description:</label>
+        <textarea
+          id="jobDescription"
+          value={jobDescription}
+          onChange={(event) => setJobDescription(event.target.value)}
+          required
+        />
+      </div>
+      {/* Upload Resume */}
+      <div className="form-group">
+        <label htmlFor="resumeFile">Upload Resume (PDF/Word):</label>
+        <input
+          type="file"
+          id="resumeFile"
+          accept=".pdf,.doc,.docx"
+          onChange={handleFileChange}
+          required
+        />
+      </div>
+      {/* Submit Button */}
+      <button type="submit">Submit</button>
+    </form>
+    {/* Matching Skills */}
+    <div>
+      <h2 style={{ color: "black" }}>Number of Matching Skills:</h2>
+      <b><p style={{color:"black"}}>{matchingSkills}</p></b>
     </div>
+  </div>
+  
   );
 }
 
