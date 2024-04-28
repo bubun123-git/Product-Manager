@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-
+import { v4 as uuidv4 } from "uuid";
 
 function App() {
   // State variables
@@ -71,7 +71,8 @@ function App() {
     setMatchingSkillsCount(matching.length);
 
     // Store job description in the provided API
-    fetch("https://crudcrud.com/api/17fb8cd13bf0449ead544a5d85082df0/jobDescriptions", {
+    const id = uuidv4();
+    fetch(`https://crudcrud.com/api/17fb8cd13bf0449ead544a5d85082df0/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -101,7 +102,6 @@ function App() {
   // Render component
   return (
     <div className="container">
-    
       <div className="app">
         <h1>Apply for a Job</h1>
         <form onSubmit={handleSubmit}>

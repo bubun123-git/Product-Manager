@@ -6,13 +6,12 @@ const app = express();
 
 app.use(cors());
 
-
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "password",
   database: "skills_management",
-  port: 3306
+  port: 3306,
 });
 
 db.connect((err) => {
