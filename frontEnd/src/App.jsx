@@ -45,66 +45,74 @@ function App() {
   };
 
   // Handle form submission
-  // Handle form submission
-const handleSubmit = (event) => {
-  event.preventDefault();
-  console.log("Job Description:", jobDescription);
-  console.log("Resume File:", resumeFile);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log("Job Description:", jobDescription);
+    console.log("Resume File:", resumeFile);
 
-  // Match keywords with skills
-  const matching = skills.filter((skill) => {
-    if (typeof skill === "object" && skill.skill) {
-      return jobDescription.toLowerCase().includes(skill.skill.toLowerCase());
-    }
-    return false;
-  });
+    // Match keywords with skills
+    const matching = skills.filter((skill) => {
+      if (typeof skill === "object" && skill.skill) {
+        return jobDescription.toLowerCase().includes(skill.skill.toLowerCase());
+      }
+      return false;
+    });
 
-  console.log("Number of Matching Skills:", matching.length);
-  console.log("Matching Skills:", matching.map((skill) => skill.skill));
+    console.log("Number of Matching Skills:", matching.length);
+    console.log("Matching Skills:");
+    matching.forEach((skill) => {
+      console.log("Skill:", skill.skill, "- Level:", skill.level);
+    });
 
-  setMatchingSkills(matching.length);
+    setMatchingSkills(matching);
 
-  setJobDescription("");
-  setResumeFile(null);
-};
+    // Update number of matching skills in UI
+    setMatchingSkillsCount(matching.length);
 
+    setJobDescription("");
+    setResumeFile(null);
+  };
+
+  // State variable to store number of matching skills
+  const [matchingSkillsCount, setMatchingSkillsCount] = useState(0);
 
   // Render component
   return (
     <div className="app">
-    <h1>Apply for a Job</h1>
-    <form onSubmit={handleSubmit}>
-      {/* Job Description */}
-      <div className="form-group">
-        <label htmlFor="jobDescription">Job Description:</label>
-        <textarea
-          id="jobDescription"
-          value={jobDescription}
-          onChange={(event) => setJobDescription(event.target.value)}
-          required
-        />
+      <h1>Apply for a Job</h1>
+      <form onSubmit={handleSubmit}>
+        {/* Job Description */}
+        <div className="form-group">
+          <label htmlFor="jobDescription">Job Description:</label>
+          <textarea
+            id="jobDescription"
+            value={jobDescription}
+            onChange={(event) => setJobDescription(event.target.value)}
+            required
+          />
+        </div>
+        {/* Upload Resume */}
+        <div className="form-group">
+          <label htmlFor="resumeFile">Upload Resume (PDF/Word):</label>
+          <input
+            type="file"
+            id="resumeFile"
+            accept=".pdf,.doc,.docx"
+            onChange={handleFileChange}
+            required
+          />
+        </div>
+        {/* Submit Button */}
+        <button type="submit">Submit</button>
+      </form>
+      {/* Display number of matching skills in UI */}
+      <div>
+        <h2 style={{ color: "black" }}>Number of Matching Skills:</h2>
+        <b>
+          <p style={{ color: "black" }}>{matchingSkillsCount}</p>
+        </b>
       </div>
-      {/* Upload Resume */}
-      <div className="form-group">
-        <label htmlFor="resumeFile">Upload Resume (PDF/Word):</label>
-        <input
-          type="file"
-          id="resumeFile"
-          accept=".pdf,.doc,.docx"
-          onChange={handleFileChange}
-          required
-        />
-      </div>
-      {/* Submit Button */}
-      <button type="submit">Submit</button>
-    </form>
-    {/* Matching Skills */}
-    <div>
-      <h2 style={{ color: "black" }}>Number of Matching Skills:</h2>
-      <b><p style={{color:"black"}}>{matchingSkills}</p></b>
     </div>
-  </div>
-  
   );
 }
 

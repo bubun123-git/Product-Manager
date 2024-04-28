@@ -1,17 +1,32 @@
 /* Base styles for a clean and modern look */
 body {
-  font-family: sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Modern system font stack */
   margin: 0;
   padding: 0;
 }
 
 .app {
+  position: relative;
   width: 600px; /* Adjust width as needed */
   margin: 50px auto; /* Center the form horizontally */
   padding: 30px;
   border-radius: 5px;
   background-color: #e6d3ac; /* Light blue background */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  /* Modern Enhancements */
+  display: flex; /* Enable flexbox for layout flexibility */
+  flex-direction: column; /* Arrange elements vertically */
+  align-items: center; /* Center elements horizontally within the container */
+  justify-content: space-between; /* Distribute elements with some spacing */
+
+  /* Subtle border and hover effect (optional) */
+  border: 1px solid rgba(0, 0, 0, 0.1); /* Thin gray border */
+  transition: border-color 0.2s ease-in-out; /* Smooth hover effect */
+
+  &:hover {
+    border-color: rgba(0, 0, 0, 0.2); /* Darken border on hover */
+  }
 }
 
 h1 {
@@ -21,9 +36,9 @@ h1 {
   color: #333; /* Darker text for readability */
 }
 
-/* Form group styles for clarity and visual hierarchy */
+/* Form group styles for clarity and improved spacing */
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 15px; /* Reduce margin slightly for a cleaner look */
 }
 
 label {
@@ -33,30 +48,32 @@ label {
   color: #333; /* Darker text for readability */
 }
 
-/* Input and Textarea styles for a professional look */
+/* Input and Textarea styles for a sleek and modern look */
 input[type="text"],
 input[type="file"],
 textarea {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+  padding: 15px; /* Increase padding for a more spacious feel */
+  border: 1px solid #ddd; /* Slightly lighter border color */
+  border-radius: 4px; /* Increased border radius for a softer look */
   font-size: 16px;
-  color: #f8f8f8;
+  color: #333; /* Adjust text color for better contrast */
   resize: none; /* Disable resizing for textarea */
+  background-color: #f5f5f5; /* Light gray background for improved readability */
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Subtle inset shadow */
 }
 
 input[type="file"] {
   cursor: pointer; /* Indicate clickable file upload */
 }
 
-/* Button styles for a clear call to action */
+/* Button styles for a modern and clear call to action */
 button[type="submit"] {
   background-color: #4CAF50; /* Green color for positive action */
   color: white;
-  padding: 10px 20px;
+  padding: 12px 25px; /* Adjust padding for a balanced look */
   border: none;
-  border-radius: 3px;
+  border-radius: 4px; /* Increased border radius for a softer look */
   cursor: pointer;
   font-size: 16px;
   transition: 0.3s ease-in-out background-color; /* Smooth hover effect */
@@ -64,4 +81,15 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #3e8e41; /* Darker green on hover */
+}
+
+/* Image styles */
+.app img {
+  width: 100%; /* Ensure the image covers the entire container */
+  height: auto; /* Maintain aspect ratio */
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1; /* Ensure the image stays behind other content */
+  border-radius: 5px 5px 0 0; /* Rounded corners only at the top */
 }
