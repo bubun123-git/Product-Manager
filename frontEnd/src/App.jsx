@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
+
 function App() {
   // State variables
   const [skills, setSkills] = useState([]); // Stores skills fetched from the server
@@ -69,6 +70,27 @@ function App() {
     // Update number of matching skills in UI
     setMatchingSkillsCount(matching.length);
 
+    // Store job description in the provided API
+    fetch("https://crudcrud.com/api/17fb8cd13bf0449ead544a5d85082df0/jobDescriptions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        jobDescription,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Error storing data in API");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Stored data in API:", data);
+      })
+      .catch((err) => console.log(err));
+
     setJobDescription("");
     setResumeFile(null);
   };
@@ -78,39 +100,42 @@ function App() {
 
   // Render component
   return (
-    <div className="app">
-      <h1>Apply for a Job</h1>
-      <form onSubmit={handleSubmit}>
-        {/* Job Description */}
-        <div className="form-group">
-          <label htmlFor="jobDescription">Job Description:</label>
-          <textarea
-            id="jobDescription"
-            value={jobDescription}
-            onChange={(event) => setJobDescription(event.target.value)}
-            required
-          />
+    <div className="container">
+    
+      <div className="app">
+        <h1>Apply for a Job</h1>
+        <form onSubmit={handleSubmit}>
+          {/* Job Description */}
+          <div className="form-group">
+            <label htmlFor="jobDescription">Job Description:</label>
+            <textarea
+              id="jobDescription"
+              value={jobDescription}
+              onChange={(event) => setJobDescription(event.target.value)}
+              required
+            />
+          </div>
+          {/* Upload Resume */}
+          <div className="form-group">
+            <label htmlFor="resumeFile">Upload Resume (PDF/Word):</label>
+            <input
+              type="file"
+              id="resumeFile"
+              accept=".pdf,.doc,.docx"
+              onChange={handleFileChange}
+              required
+            />
+          </div>
+          {/* Submit Button */}
+          <button type="submit">Submit</button>
+        </form>
+        {/* Display number of matching skills in UI */}
+        <div>
+          <h2 style={{ color: "black" }}>Number of Matching Skills:</h2>
+          <b>
+            <p style={{ color: "black" }}>{matchingSkillsCount}</p>
+          </b>
         </div>
-        {/* Upload Resume */}
-        <div className="form-group">
-          <label htmlFor="resumeFile">Upload Resume (PDF/Word):</label>
-          <input
-            type="file"
-            id="resumeFile"
-            accept=".pdf,.doc,.docx"
-            onChange={handleFileChange}
-            required
-          />
-        </div>
-        {/* Submit Button */}
-        <button type="submit">Submit</button>
-      </form>
-      {/* Display number of matching skills in UI */}
-      <div>
-        <h2 style={{ color: "black" }}>Number of Matching Skills:</h2>
-        <b>
-          <p style={{ color: "black" }}>{matchingSkillsCount}</p>
-        </b>
       </div>
     </div>
   );
