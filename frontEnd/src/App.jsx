@@ -8,10 +8,9 @@ function App() {
   const [skills, setSkills] = useState([]); // Stores skills fetched from the server
   const [jobDescription, setJobDescription] = useState(""); // Stores job description entered by user
   const [resumeFile, setResumeFile] = useState(null); // Stores resume file uploaded by user
-  const [matchingSkillsCountFromJob, setMatchingSkillsCountFromJob] =
-    useState(0); // Stores the number of matching skills from job description
-  const [matchingSkillsCountFromPDF, setMatchingSkillsCountFromPDF] =
-    useState(0); // Stores the number of matching skills from PDF
+  const [matchingSkillsCountFromJob, setMatchingSkillsCountFromJob] = useState(0); // Stores the number of matching skills from job description
+  const [matchingSkillsCountFromPDF, setMatchingSkillsCountFromPDF] = useState(0); // Stores the number of matching skills from PDF
+  const [matchedLevels, setMatchedLevels] = useState({}); // Stores the count of matched levels
 
   useEffect(() => {
     // Function to fetch skills from the server
@@ -40,8 +39,7 @@ function App() {
       file &&
       (file.type === "application/pdf" ||
         file.type === "application/msword" ||
-        file.type ===
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     ) {
       setResumeFile(file);
     } else {
@@ -77,6 +75,9 @@ function App() {
     // Set the number of matching skills from job description
     setMatchingSkillsCountFromJob(matchingFromJobDescription.length);
 
+    // Reset matched levels count
+    setMatchedLevels({});
+
     if (resumeFile) {
       try {
         const parsedText = await parsePDF(resumeFile);
@@ -89,6 +90,11 @@ function App() {
         console.log("Matching Skills from PDF:");
         matchingFromPDF.forEach((skill) => {
           console.log("Skill:", skill.skill, "- Level:", skill.level);
+          // Count the matched levels
+          setMatchedLevels((prevLevels) => ({
+            ...prevLevels,
+            [skill.level]: (prevLevels[skill.level] || 0) + 1,
+          }));
         });
 
         // Set the number of matching skills from PDF
@@ -100,6 +106,21 @@ function App() {
       // If no resume file is uploaded, set the number of matching skills from PDF to 0
       setMatchingSkillsCountFromPDF(0);
     }
+  };
+
+  // Determine the level with the most matched skills
+  const determineBestMatchedLevel = () => {
+    let maxCount = 0;
+    let bestMatchedLevel = '';
+
+    Object.entries(matchedLevels).forEach(([level, count]) => {
+      if (count > maxCount) {
+        maxCount = count;
+        bestMatchedLevel = level;
+      }
+    });
+
+    return bestMatchedLevel;
   };
 
   // Render component
@@ -144,6 +165,15 @@ function App() {
             </p>
           </div>
         </div>
+        {/* Display best matched level */}
+        {Object.keys(matchedLevels).length > 0 && (
+          <div className="matched-level">
+            <h2 style={{ color: "black" }}>Best Matched Level:</h2>
+            <p style={{ color: "black" }}>
+              {determineBestMatchedLevel() || 'No level matched'}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
