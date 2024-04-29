@@ -123,6 +123,17 @@ function App() {
     return bestMatchedLevel;
   };
 
+  // Function to download the uploaded CV
+  const downloadCV = () => {
+    const url = URL.createObjectURL(resumeFile);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'resume.pdf'; // Change the filename as needed
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   // Render component
   return (
     <div className="container">
@@ -173,6 +184,10 @@ function App() {
               {determineBestMatchedLevel() || 'No level matched'}
             </p>
           </div>
+        )}
+        {/* Download CV button */}
+        {resumeFile && (
+          <button onClick={downloadCV}>Download CV</button>
         )}
       </div>
     </div>
