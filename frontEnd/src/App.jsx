@@ -53,15 +53,17 @@ function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("Job Description:", jobDescription);
-    console.log("Resume File:", resumeFile);
 
-    // Match keywords with skills from job description
-    const matchingFromJobDescription = skills.filter((skill) => {
-      if (typeof skill === "object" && skill.skill) {
-        return jobDescription.toLowerCase().includes(skill.skill.toLowerCase());
-      }
-      return false;
-    });
+    const matchSkills = (text, skills) => {
+      return skills.filter((skill) => {
+        if (typeof skill === "object" && skill.skill) {
+          return text.toLowerCase().includes(skill.skill.toLowerCase());
+        }
+        return false;
+      });
+    };
+
+    const matchingFromJobDescription = matchSkills(jobDescription, skills);
 
     console.log(
       "Number of Matching Skills from Job Description:",
@@ -75,16 +77,11 @@ function App() {
     // Set the number of matching skills from job description
     setMatchingSkillsCountFromJob(matchingFromJobDescription.length);
 
-    // Parse PDF and match keywords with skills
     if (resumeFile) {
       try {
         const parsedText = await parsePDF(resumeFile);
-        const matchingFromPDF = skills.filter((skill) => {
-          if (typeof skill === "object" && skill.skill) {
-            return parsedText.toLowerCase().includes(skill.skill.toLowerCase());
-          }
-          return false;
-        });
+        const matchingFromPDF = matchSkills(parsedText, skills);
+
         console.log(
           "Number of Matching Skills from PDF:",
           matchingFromPDF.length
@@ -136,7 +133,7 @@ function App() {
           <button type="submit">Submit</button>
         </form>
         {/* Display number of matching skills in UI */}
-        <div class="matching-skills">
+        <div className="matching-skills">
           <h2 style={{ color: "black" }}>Number of Matching Skills:</h2>
           <div>
             <p style={{ color: "black" }}>
