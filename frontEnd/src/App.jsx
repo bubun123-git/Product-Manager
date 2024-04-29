@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import { v4 as uuidv4 } from "uuid";
+import parsePDF from "./assets/pdfParser";
 
 function App() {
   // State variables
   const [skills, setSkills] = useState([]); // Stores skills fetched from the server
   const [jobDescription, setJobDescription] = useState(""); // Stores job description entered by user
   const [resumeFile, setResumeFile] = useState(null); // Stores resume file uploaded by user
-  const [matchingSkills, setMatchingSkills] = useState([]); // Stores matching skills
+  const [matchingSkillsCountFromJob, setMatchingSkillsCountFromJob] =
+    useState(0); // Stores the number of matching skills from job description
+  const [matchingSkillsCountFromPDF, setMatchingSkillsCountFromPDF] =
+    useState(0); // Stores the number of matching skills from PDF
 
   useEffect(() => {
     // Function to fetch skills from the server
@@ -46,58 +50,60 @@ function App() {
   };
 
   // Handle form submission
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("Job Description:", jobDescription);
     console.log("Resume File:", resumeFile);
 
-    // Match keywords with skills
-    const matching = skills.filter((skill) => {
+    // Match keywords with skills from job description
+    const matchingFromJobDescription = skills.filter((skill) => {
       if (typeof skill === "object" && skill.skill) {
         return jobDescription.toLowerCase().includes(skill.skill.toLowerCase());
       }
       return false;
     });
 
-    console.log("Number of Matching Skills:", matching.length);
-    console.log("Matching Skills:");
-    matching.forEach((skill) => {
+    console.log(
+      "Number of Matching Skills from Job Description:",
+      matchingFromJobDescription.length
+    );
+    console.log("Matching Skills from Job Description:");
+    matchingFromJobDescription.forEach((skill) => {
       console.log("Skill:", skill.skill, "- Level:", skill.level);
     });
 
-    setMatchingSkills(matching);
+    // Set the number of matching skills from job description
+    setMatchingSkillsCountFromJob(matchingFromJobDescription.length);
 
-    // Update number of matching skills in UI
-    setMatchingSkillsCount(matching.length);
+    // Parse PDF and match keywords with skills
+    if (resumeFile) {
+      try {
+        const parsedText = await parsePDF(resumeFile);
+        const matchingFromPDF = skills.filter((skill) => {
+          if (typeof skill === "object" && skill.skill) {
+            return parsedText.toLowerCase().includes(skill.skill.toLowerCase());
+          }
+          return false;
+        });
+        console.log(
+          "Number of Matching Skills from PDF:",
+          matchingFromPDF.length
+        );
+        console.log("Matching Skills from PDF:");
+        matchingFromPDF.forEach((skill) => {
+          console.log("Skill:", skill.skill, "- Level:", skill.level);
+        });
 
-    // Store job description in the provided API
-    const id = uuidv4();
-    fetch(`https://crudcrud.com/api/17fb8cd13bf0449ead544a5d85082df0/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        jobDescription,
-      }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Error storing data in API");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Stored data in API:", data);
-      })
-      .catch((err) => console.log(err));
-
-    setJobDescription("");
-    setResumeFile(null);
+        // Set the number of matching skills from PDF
+        setMatchingSkillsCountFromPDF(matchingFromPDF.length);
+      } catch (error) {
+        console.error("Error parsing PDF:", error);
+      }
+    } else {
+      // If no resume file is uploaded, set the number of matching skills from PDF to 0
+      setMatchingSkillsCountFromPDF(0);
+    }
   };
-
-  // State variable to store number of matching skills
-  const [matchingSkillsCount, setMatchingSkillsCount] = useState(0);
 
   // Render component
   return (
@@ -126,15 +132,20 @@ function App() {
               required
             />
           </div>
-          {/* Submit Button */}
+          
           <button type="submit">Submit</button>
         </form>
         {/* Display number of matching skills in UI */}
         <div>
           <h2 style={{ color: "black" }}>Number of Matching Skills:</h2>
-          <b>
-            <p style={{ color: "black" }}>{matchingSkillsCount}</p>
-          </b>
+          <div>
+            <p style={{ color: "black" }}>
+              <b>From Job Description: {matchingSkillsCountFromJob}</b>
+            </p>
+            <p style={{ color: "black" }}>
+              <b>From PDF: {matchingSkillsCountFromPDF}</b>
+            </p>
+          </div>
         </div>
       </div>
     </div>
