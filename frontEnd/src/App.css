@@ -1,12 +1,10 @@
-/* Base styles for a clean and modern look */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Modern system font stack */
-  margin: 0;
-  padding: 0;
+  background-color: #f0f0f0; /* Subtle background color */
+  font-family: Arial, sans-serif; /* Arial font */
 }
 
 .app {
-  position: relative;
+  
   width: 600px; /* Adjust width as needed */
   margin: 50px auto; /* Center the form horizontally */
   padding: 30px;
@@ -23,10 +21,14 @@ body {
   /* Subtle border and hover effect (optional) */
   border: 1px solid rgba(0, 0, 0, 0.1); /* Thin gray border */
   transition: border-color 0.2s ease-in-out; /* Smooth hover effect */
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
-  &:hover {
-    border-color: rgba(0, 0, 0, 0.2); /* Darken border on hover */
-  }
+.app:hover {
+  border-color: rgba(0, 0, 0, 0.2); /* Darken border on hover */
 }
 
 h1 {
@@ -77,10 +79,40 @@ button[type="submit"] {
   cursor: pointer;
   font-size: 16px;
   transition: 0.3s ease-in-out background-color; /* Smooth hover effect */
+  position: relative; /* Allows the button to contain graphics */
 }
 
 button[type="submit"]:hover {
   background-color: #3e8e41; /* Darker green on hover */
+}
+
+/* Button graphics */
+button[type="submit"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px; /* Inherit border radius from button */
+  background-color: #3e8e41; /* Darker green for hover effect */
+  transform: scaleX(0); /* Initially scaled to 0 width */
+  transition: 0.3s ease-in-out transform; /* Smooth animation */
+}
+
+button[type="submit"]:hover::before {
+  transform: scaleX(1); /* Scale to full width on hover */
+}
+
+button[type="submit"]::after {
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2'/%3E%3C/svg%3E");
+  background-size: 24px 24px; /* Size of the SVG icon */
+  background-position: center; /* Center the icon */
+  background-repeat: no-repeat; /* Only show the icon once */
+  width: 24px; /* Width of the icon */
+  height: 24px; /* Height of the icon */
+  margin-left: 10px; /* Space between icon and text */
 }
 
 /* Image styles */
@@ -92,4 +124,33 @@ button[type="submit"]:hover {
   left: 0;
   z-index: -1; /* Ensure the image stays behind other content */
   border-radius: 5px 5px 0 0; /* Rounded corners only at the top */
+  filter: grayscale(100%); /* Convert image to grayscale */
+  transition: 0.3s ease-in-out filter; /* Smooth animation */
+}
+
+.app:hover img {
+  filter: grayscale(0); /* Revert to original color on hover */
+}
+
+/* Display number of matching skills in UI */
+.matching-skills {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.matching-skills h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.matching-skills p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.matching-skills b {
+  color: #333; /* Darker text for readability */
 }

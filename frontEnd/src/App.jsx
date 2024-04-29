@@ -132,11 +132,11 @@ function App() {
               required
             />
           </div>
-          
+
           <button type="submit">Submit</button>
         </form>
         {/* Display number of matching skills in UI */}
-        <div>
+        <div class="matching-skills">
           <h2 style={{ color: "black" }}>Number of Matching Skills:</h2>
           <div>
             <p style={{ color: "black" }}>
