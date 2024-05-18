@@ -8,9 +8,12 @@ function App() {
   const [skills, setSkills] = useState([]); // Stores skills fetched from the server
   const [jobDescription, setJobDescription] = useState(""); // Stores job description entered by user
   const [resumeFile, setResumeFile] = useState(null); // Stores resume file uploaded by user
-  const [matchingSkillsCountFromJob, setMatchingSkillsCountFromJob] = useState(0); // Stores the number of matching skills from job description
-  const [matchingSkillsCountFromPDF, setMatchingSkillsCountFromPDF] = useState(0); // Stores the number of matching skills from PDF
+  const [matchingSkillsCountFromJob, setMatchingSkillsCountFromJob] =
+    useState(0); // Stores the number of matching skills from job description
+  const [matchingSkillsCountFromPDF, setMatchingSkillsCountFromPDF] =
+    useState(0); // Stores the number of matching skills from PDF
   const [matchedLevels, setMatchedLevels] = useState({}); // Stores the count of matched levels
+  const [isSubmitted, setIsSubmitted] = useState(false); // Tracks form submission status
 
   useEffect(() => {
     // Function to fetch skills from the server
@@ -39,7 +42,8 @@ function App() {
       file &&
       (file.type === "application/pdf" ||
         file.type === "application/msword" ||
-        file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     ) {
       setResumeFile(file);
     } else {
@@ -106,12 +110,15 @@ function App() {
       // If no resume file is uploaded, set the number of matching skills from PDF to 0
       setMatchingSkillsCountFromPDF(0);
     }
+
+    // Set form submission status to true
+    setIsSubmitted(true);
   };
 
   // Determine the level with the most matched skills
   const determineBestMatchedLevel = () => {
     let maxCount = 0;
-    let bestMatchedLevel = '';
+    let bestMatchedLevel = "";
 
     Object.entries(matchedLevels).forEach(([level, count]) => {
       if (count > maxCount) {
@@ -126,9 +133,9 @@ function App() {
   // Function to download the uploaded CV
   const downloadCV = () => {
     const url = URL.createObjectURL(resumeFile);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'resume.pdf'; // Change the filename as needed
+    a.download = "resume.pdf"; // Change the filename as needed
     document.body.appendChild(a);
     a.click();
     URL.revokeObjectURL(url);
@@ -165,30 +172,30 @@ function App() {
           <button type="submit">Submit</button>
         </form>
         {/* Display number of matching skills in UI */}
-        <div className="matching-skills">
-          <h2 style={{ color: "black" }}>Number of Matching Skills:</h2>
-          <div>
-            <p style={{ color: "black" }}>
-              <b>From Job Description: {matchingSkillsCountFromJob}</b>
-            </p>
-            <p style={{ color: "black" }}>
-              <b>From PDF: {matchingSkillsCountFromPDF}</b>
-            </p>
+        {isSubmitted && (
+          <div className="matching-skills">
+            <h2 style={{ color: "black" }}>Number of Matching Skills:</h2>
+            <div>
+              <p style={{ color: "black" }}>
+                <b>From Job Description: {matchingSkillsCountFromJob}</b>
+              </p>
+              <p style={{ color: "black" }}>
+                <b>From PDF: {matchingSkillsCountFromPDF}</b>
+              </p>
+            </div>
           </div>
-        </div>
+        )}
         {/* Display best matched level */}
-        {Object.keys(matchedLevels).length > 0 && (
+        {isSubmitted && Object.keys(matchedLevels).length > 0 && (
           <div className="matched-level">
             <h2 style={{ color: "black" }}>Best Matched Level:</h2>
             <p style={{ color: "black" }}>
-              {determineBestMatchedLevel() || 'No level matched'}
+              {determineBestMatchedLevel() || "No level matched"}
             </p>
           </div>
         )}
         {/* Download CV button */}
-        {resumeFile && (
-          <button onClick={downloadCV}>Download CV</button>
-        )}
+        {resumeFile && <button onClick={downloadCV}>Download CV</button>}
       </div>
     </div>
   );
